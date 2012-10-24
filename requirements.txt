@@ -1,0 +1,9 @@
+# Project
+scrapy<=0.12.99
+parsedatetime
+boto
+
+# Testing
+nose
+nose-cov
+coverage
