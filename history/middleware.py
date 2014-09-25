@@ -1,5 +1,5 @@
 from datetime import datetime
-from parsedatetime import parsedatetime, parsedatetime_consts
+from parsedatetime import parsedatetime, Constants
 
 from scrapy import signals
 from scrapy.xlib.pydispatch import dispatcher
@@ -91,7 +91,7 @@ class HistoryMiddleware(object):
         except ValueError:
             pass
 
-        parser = parsedatetime.Calendar(parsedatetime_consts.Constants())
+        parser = parsedatetime.Calendar(Constants())
         time_tupple = parser.parse(epoch) # 'yesterday' => (time.struct_time, int)
         if not time_tupple[1]:
             raise NotConfigured('Could not parse epoch: %s' % epoch)
