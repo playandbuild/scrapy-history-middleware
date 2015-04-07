@@ -5,7 +5,7 @@ import pickle
 from scrapy import log
 from scrapy.conf import settings
 from scrapy.utils.request import request_fingerprint
-from scrapy.core.downloader.responsetypes import responsetypes
+from scrapy.responsetypes import responsetypes
 
 
 class S3CacheStorage(object):

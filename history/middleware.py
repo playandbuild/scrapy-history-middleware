@@ -3,8 +3,6 @@ from parsedatetime import parsedatetime, Constants
 
 from scrapy import signals
 from scrapy.xlib.pydispatch import dispatcher
-from scrapy.conf import settings
-from scrapy.stats import stats
 from scrapy.exceptions import NotConfigured, IgnoreRequest
 from scrapy.utils.misc import load_object
 
@@ -12,7 +10,10 @@ from scrapy.utils.misc import load_object
 class HistoryMiddleware(object):
     DATE_FORMAT = '%Y%m%d'
 
-    def __init__(self, settings=settings):
+    def __init__(self, crawler):
+        self.stats = crawler.stats
+        settings = crawler.settings
+
         history = settings.get('HISTORY', None)
         if not history:
             raise NotConfigured()
@@ -33,6 +34,10 @@ class HistoryMiddleware(object):
 
         dispatcher.connect(self.spider_opened, signal=signals.spider_opened)
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
 
     def spider_opened(self, spider):
         self.storage.open_spider(spider)
@@ -69,7 +74,7 @@ class HistoryMiddleware(object):
         """
         if self.store_if(spider, request, response):
             self.storage.store_response(spider, request, response)
-            stats.set_value('history/cached', True, spider=spider)
+            self.stats.set_value('history/cached', True, spider=spider)
 
         return response
 
